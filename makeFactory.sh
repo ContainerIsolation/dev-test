@@ -26,5 +26,5 @@ class ${CLASS_NAME}Factory extends AbstractFactory
     /**
      * @inheritDoc
      */
-    protected $className = $CLASS_NAME::class;
+    protected \$className = $CLASS_NAME::class;
 }"

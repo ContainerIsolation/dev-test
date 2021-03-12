@@ -47,6 +47,6 @@
 
 ## Closing Checklist
 
-- [ ]  The code is complete
-- [ ]  The project has been manually tested to be working
-- [ ]  The project passes all automatic tests.
+- [x]  The code is complete
+- [x]  The project has been manually tested to be working
+- [x]  The project passes all automatic tests.

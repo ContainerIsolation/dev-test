@@ -1,0 +1,16 @@
+<h1>Search Results</h1>
+<p>{{results.totalItems}} results, {{results.currentPageCount}} on this page, page {{results.currentPage}} of {{results.totalPages}} ({{results.requestTime}} seconds)</p>
+<ul>
+    {{#each results.result}}
+    <li>{{type}} - <a href="/{{type}}/{{data.id}}">{{data.name}}</a></li>
+    {{/each}}
+</ul>
+<footer>
+    <a href="/">Home</a>
+    {{#if results.previousPage}}
+    <a href="{{results.previousPage}}">Previous</a>
+    {{/if}}
+    {{#if results.nextPage}}
+    <a href="{{results.nextPage}}">Next</a>
+    {{/if}}
+</footer>

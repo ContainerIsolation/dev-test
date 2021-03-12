@@ -4,7 +4,7 @@ namespace Totallywicked\DevTest\Action;
 use Totallywicked\DevTest\Http\Response\ResponseFactory;
 use Totallywicked\DevTest\Template\HandlebarsTemplateFactory;
 use Totallywicked\DevTest\Template\HandlebarsTemplate;
-use Totallywicked\DevTest\Model\DataProviderInterface;
+use Totallywicked\DevTest\Model\DataProvider\DataProviderInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;

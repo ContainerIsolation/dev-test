@@ -1,5 +1,5 @@
 <?php
-namespace Totallywicked\DevTest\DataProvider;
+namespace Totallywicked\DevTest\Model\DataProvider;
 
 /**
  * A simple flexible interface that accepts data in array format and returns data in array format.

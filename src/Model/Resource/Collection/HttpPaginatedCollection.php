@@ -184,7 +184,7 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
     /**
      * @inheritDoc
      */
-    public function offsetExists(mixed $offset): bool
+    public function offsetExists($offset): bool
     {
         try {
             $max = $this->getNumberOfItems();
@@ -197,7 +197,7 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
     /**
      * @inheritDoc
      */
-    public function offsetGet(mixed $offset)
+    public function offsetGet($offset)
     {
         try {
             return $this->getItem($offset);
@@ -209,7 +209,7 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
     /**
      * @inheritDoc
      */
-    public function offsetSet(mixed $offset, mixed $value)
+    public function offsetSet($offset, $value)
     {
         // Nada
     }
@@ -217,7 +217,7 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
     /**
      * @inheritDoc
      */
-    public function offsetUnset(mixed $offset)
+    public function offsetUnset($offset)
     {
         // Nada
     }

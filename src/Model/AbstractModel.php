@@ -65,7 +65,7 @@ abstract class AbstractModel implements ModelInterface
     /**
      * @inheritDoc
      */
-    public function offsetExists(mixed $offset): bool
+    public function offsetExists($offset): bool
     {
         return $this->data[$offset] !== null;
     }
@@ -73,7 +73,7 @@ abstract class AbstractModel implements ModelInterface
     /**
      * @inheritDoc
      */
-    public function offsetGet(mixed $offset)
+    public function offsetGet($offset)
     {
         return $this->data[$offset];
     }
@@ -81,7 +81,7 @@ abstract class AbstractModel implements ModelInterface
     /**
      * @inheritDoc
      */
-    public function offsetSet(mixed $offset, mixed $value)
+    public function offsetSet($offset, $value)
     {
         $this->data[$offset] = $value;
     }
@@ -89,7 +89,7 @@ abstract class AbstractModel implements ModelInterface
     /**
      * @inheritDoc
      */
-    public function offsetUnset(mixed $offset)
+    public function offsetUnset($offset)
     {
         unset($this->data[$offset]);
     }
@@ -105,7 +105,7 @@ abstract class AbstractModel implements ModelInterface
     /**
      * @inheritDoc
      */
-    public function unserialize(string $serialized)
+    public function unserialize($serialized)
     {
         $this->data = json_decode($serialized, TRUE);
     }

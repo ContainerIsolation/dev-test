@@ -330,7 +330,7 @@ abstract class AbstractHttpResource implements HttpResourceInterface
     /**
      * @inheritDoc
      */
-    public function offsetExists(mixed $offset): bool
+    public function offsetExists($offset): bool
     {
         try {
             $model = $this->getById($offset);
@@ -343,7 +343,7 @@ abstract class AbstractHttpResource implements HttpResourceInterface
     /**
      * @inheritDoc
      */
-    public function offsetGet(mixed $offset)
+    public function offsetGet($offset)
     {
         try {
             $model = $this->getById($offset);
@@ -356,7 +356,7 @@ abstract class AbstractHttpResource implements HttpResourceInterface
     /**
      * @inheritDoc
      */
-    public function offsetSet(mixed $offset, mixed $value)
+    public function offsetSet($offset, $value)
     {
         // Nada
     }
@@ -364,7 +364,7 @@ abstract class AbstractHttpResource implements HttpResourceInterface
     /**
      * @inheritDoc
      */
-    public function offsetUnset(mixed $offset)
+    public function offsetUnset($offset)
     {
         // Nada
     }

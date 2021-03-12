@@ -1,7 +1,8 @@
 <?php
 namespace Totallywicked\DevTest\Model\Resource;
 
-use Totallywicked\DevTest\Factory\FactoryInterface;
+use Totallywicked\DevTest\Model\Resource\Collection\HttpPaginatedCollectionInterfaceFactory;
+use Totallywicked\DevTest\Model\ResourceIteratorFactory;
 use Totallywicked\DevTest\Model\CharacterFactory;
 use Psr\Http\Message\UriInterface;
 use GuzzleHttp\ClientInterface;
@@ -14,16 +15,16 @@ class CharacterResource extends AbstractHttpResource
     /**
      * Constructor
      * @param ClientInterface $httpClient
-     * @param FactoryInterface $iteratorFactory
+     * @param ResourceIteratorFactory $iteratorFactory
      * @param CharacterFactory $modelFactory
-     * @param FactoryInterface $collectionFactory
+     * @param HttpPaginatedCollectionInterfaceFactory $collectionFactory
      * @param UriInterface $resourceUri
      */
     public function __construct(
         ClientInterface $httpClient,
-        FactoryInterface $iteratorFactory,
-        CharacterFactory $modelFactory = null,
-        FactoryInterface $collectionFactory = null,
+        ResourceIteratorFactory $iteratorFactory,
+        CharacterFactory $modelFactory,
+        HttpPaginatedCollectionInterfaceFactory $collectionFactory = null,
         UriInterface $resourceUri = null
     ) {
         $this->httpClient = $httpClient;

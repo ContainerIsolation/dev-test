@@ -1,6 +1,7 @@
 <h1>500</h1>
 <p>Whoops!</p>
+<p style="font-weight: bold;">Error: {{error.class}}</p>
 <pre>
-{{error.message}}
+{{error.message}} in {{error.file}}:{{error.line}}
 {{error.stackTrace}}
 </pre>

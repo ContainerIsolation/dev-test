@@ -42,6 +42,9 @@ class ErrorAction extends PageAction
             'title' => $this->title,
             'error' => [
                 'message' => $request->getAttribute("error")->getMessage(),
+                'class' => get_class($request->getAttribute("error")),
+                'file' => $request->getAttribute("error")->getFile(),
+                'line' => $request->getAttribute("error")->getLine(),
                 'stackTrace' => $request->getAttribute("error")->getTraceAsString()
             ]
         ];

@@ -3,6 +3,7 @@ namespace Totallywicked\DevTest\Http\Router;
 
 use Totallywicked\DevTest\Exception\InvalidArgumentException;
 use Totallywicked\DevTest\Exception\NotFoundException;
+use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -12,21 +13,21 @@ use Psr\Http\Server\RequestHandlerInterface;
 interface RouterInterface
 {
     /**
-     * Matches the given URI against the list of configured routes.
-     * @param string|uri $page
+     * Matches the given request against the list of configured routes.
+     * @param ServerRequestInterface $request
      * @return RequestHandlerInterface
      * @throws InvalidArgumentException When $uri is invalid
      * @throws NotFoundException When the requested action handler does not exist
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
-    function match($uri): RequestHandlerInterface;
+    function match(ServerRequestInterface $request): RequestHandlerInterface;
 
     /**
      * Returns a not found 404 handler if configured,
      * otherwise throws an exception.
      * @return RequestHandlerInterface
      * @throws NotFoundException When the requested action handler does not exist
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
     function getNotFoundHandler(): RequestHandlerInterface;
 
@@ -35,7 +36,7 @@ interface RouterInterface
      * otherwise throws an exception.
      * @return RequestHandlerInterface
      * @throws NotFoundException When the requested action handler does not exist
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
     function getErrorHandler(): RequestHandlerInterface;
 }

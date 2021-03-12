@@ -6,6 +6,17 @@ use function DI\factory;
 use function DI\create;
 use function DI\get;
 
+/**
+ * Creates and returns page action configuration
+ */
+function pageAction($title, $templateFile, $layoutFile = 'layout/standard')
+{
+    return autowire(\Totallywicked\DevTest\Action\PageAction::class)
+        ->constructorParameter('templateFile', $templateFile)
+        ->constructorParameter('layoutFile', $layoutFile)
+        ->constructorParameter('title', $title);
+}
+
 return [
     \Psr\Http\Message\UriFactoryInterface::class => get(\Laminas\Diactoros\UriFactory::class),
     \GuzzleHttp\ClientInterface::class => get(\GuzzleHttp\Client::class),
@@ -15,18 +26,12 @@ return [
         'episodesPath' => '/api/episode',
         'locationPath' => '/api/location'
     ],
-    'directory' => [
-        'view' => dirname(__DIR__) . '/src/view',
-    ],
     \Totallywicked\DevTest\Http\Router\RouterInterface::class => autowire(\Totallywicked\DevTest\Http\Router\LeagueRouter::class)
         ->constructorParameter('notFoundHandler', get(\Totallywicked\DevTest\Action\NotFoundAction::class))
         ->constructorParameter('errorHandler', get(\Totallywicked\DevTest\Action\ErrorAction::class))
         ->constructorParameter('configuration', [
             'GET' => [
-                '/' => autowire(\Totallywicked\DevTest\Action\PageAction::class)
-                    ->constructorParameter('templateFile', 'index')
-                    ->constructorParameter('layoutFile', 'layout/standard')
-                    ->constructorParameter('title', 'Home')
+                '/' => pageAction("Home", "index")
             ]
         ]),
     \Totallywicked\DevTest\Template\HandlebarsTemplate::class => autowire(\Totallywicked\DevTest\Template\HandlebarsTemplate::class)

@@ -295,7 +295,7 @@ abstract class AbstractHttpResource implements HttpResourceInterface
 
     /**
      * Checks if the given ID is cached.
-     * Used by AbstractHttpPaginatedCollection
+     * Used by HttpPaginatedCollection
      * @param string $id
      * @return bool
      */

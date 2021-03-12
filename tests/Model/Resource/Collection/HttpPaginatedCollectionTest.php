@@ -6,6 +6,7 @@ use Totallywicked\DevTest\Exception\NotFoundException;
 use Totallywicked\DevTest\Model\Resource\HttpResourceInterface;
 use Totallywicked\DevTest\Model\Resource\AbstractHttpResource;
 use Totallywicked\DevTest\Model\AbstractModel;
+use Totallywicked\DevTest\Model\ResourceIterator;
 use Totallywicked\DevTest\Factory\FactoryInterface;
 use PHPUnit\Framework\MockObject\MockBuilder;
 use Laminas\Diactoros\UriFactory;
@@ -128,8 +129,18 @@ final class HttpPaginatedCollectionTest extends TestCase
     protected function setUp(): void
     {
         $uriFactory = new UriFactory();
+        $iteratorFactory = $this->createMockedFactory(
+            $this->getMockBuilder(ResourceIterator::class)
+                ->enableOriginalConstructor()
+                ->enableOriginalClone()
+                ->disableArgumentCloning()
+                ->disableAutoReturnValueGeneration(),
+            ['resource'],
+            true
+        );
         $this->resource = $this->getMockForAbstractClass(AbstractHttpResource::class, [
                 $this->createMockedHttpClient(),
+                $iteratorFactory,
                 $this->createMockedFactory(
                     $this->getMockBuilder(AbstractModel::class)
                         ->enableOriginalConstructor()
@@ -143,7 +154,7 @@ final class HttpPaginatedCollectionTest extends TestCase
                         ->enableOriginalClone()
                         ->disableArgumentCloning()
                         ->disableAutoReturnValueGeneration(),
-                    ['resource', 'query'],
+                    ['resource', $iteratorFactory, 'query'],
                     true
                 ),
                 $uriFactory->createUri('https://rickandmortyapi.com/api/character')
@@ -200,12 +211,15 @@ final class HttpPaginatedCollectionTest extends TestCase
             ->disableArgumentCloning()
             ->disallowMockingUnknownTypes()
             ->getMock();
-        $mock->method('make')->will($this->returnCallback(function($factoryArgs) use ($mockBuilder, $argsToIndex, $isAbstract)
+        $mock->method('make')->will($this->returnCallback(function($factoryArgs)
+            use ($mockBuilder, $argsToIndex, $isAbstract)
         {
             $args = [];
             foreach ($argsToIndex as $key) {
-                if (isset($factoryArgs[$key])) {
+                if (is_string($key) && isset($factoryArgs[$key])) {
                     $args[] = $factoryArgs[$key];
+                } elseif (!is_string($key)) {
+                    $args[] = $key;
                 } else {
                     $args[] = null;
                 }

@@ -6,6 +6,7 @@ use Totallywicked\DevTest\Model\Resource\Collection\HttpPaginatedCollectionInter
 use Totallywicked\DevTest\Model\Resource\HttpResourceInterface;
 use Totallywicked\DevTest\Model\Resource\AbstractHttpResource;
 use Totallywicked\DevTest\Model\AbstractModel;
+use Totallywicked\DevTest\Model\ResourceIterator;
 use Totallywicked\DevTest\Factory\FactoryInterface;
 use PHPUnit\Framework\MockObject\MockBuilder;
 use Laminas\Diactoros\UriFactory;
@@ -160,9 +161,19 @@ final class HttpResourceTest extends TestCase
     protected function setUp(): void
     {
         $uriFactory = new UriFactory();
+        $iteratorFactory = $this->createMockedFactory(
+            $this->getMockBuilder(ResourceIterator::class)
+                ->enableOriginalConstructor()
+                ->enableOriginalClone()
+                ->disableArgumentCloning()
+                ->disableAutoReturnValueGeneration(),
+            ['resource'],
+            true
+        );
         $this->uriCallCount = ["_total" => 0]; // Tracks how many times urls are called.
         $this->resource = $this->getMockForAbstractClass(AbstractHttpResource::class, [
                 $this->createMockedHttpClient(),
+                $iteratorFactory,
                 $this->createMockedFactory(
                     $this->getMockBuilder(AbstractModel::class)
                         ->enableOriginalConstructor()
@@ -225,7 +236,7 @@ final class HttpResourceTest extends TestCase
      * @param MockBuilder
      * @return FactoryInterface
      */
-    protected function createMockedFactory($mockBuilder)
+    protected function createMockedFactory($mockBuilder, $argsToIndex = [], $isAbstract = false)
     {
         $mock = $this->getMockBuilder(FactoryInterface::class)
             ->disableOriginalConstructor()
@@ -233,9 +244,23 @@ final class HttpResourceTest extends TestCase
             ->disableArgumentCloning()
             ->disallowMockingUnknownTypes()
             ->getMock();
-        $mock->method('make')->will($this->returnCallback(function() use ($mockBuilder)
+        $mock->method('make')->will($this->returnCallback(function($factoryArgs)
+            use ($mockBuilder, $argsToIndex, $isAbstract)
         {
-            return $mockBuilder->getMock();
+            $args = [];
+            foreach ($argsToIndex as $key) {
+                if (is_string($key) && isset($factoryArgs[$key])) {
+                    $args[] = $factoryArgs[$key];
+                } elseif (!is_string($key)) {
+                    $args[] = $key;
+                } else {
+                    $args[] = null;
+                }
+            }
+            if ($isAbstract) {
+                return $mockBuilder->setConstructorArgs($args)->getMockForAbstractClass();
+            }
+            return $mockBuilder->setConstructorArgs($args)->getMock();
         }));
         return $mock;
     }

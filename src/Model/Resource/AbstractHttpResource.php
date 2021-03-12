@@ -29,6 +29,12 @@ abstract class AbstractHttpResource implements HttpResourceInterface
     protected $resourceUri;
 
     /**
+     * Set to the collection factory for this resource.
+     * @var FactoryInterface
+     */
+    protected $iteratorFactory;
+
+    /**
      * Set to the model factory for this resource.
      * @var FactoryInterface
      */
@@ -61,17 +67,20 @@ abstract class AbstractHttpResource implements HttpResourceInterface
     /**
      * Constructor
      * @param ClientInterface $httpClient
+     * @param FactoryInterface $iteratorFactory
      * @param FactoryInterface $modelFactory
      * @param FactoryInterface $collectionFactory
      * @param UriInterface $resourceUri
      */
     public function __construct(
         ClientInterface $httpClient,
+        FactoryInterface $iteratorFactory,
         FactoryInterface $modelFactory = null,
         FactoryInterface $collectionFactory = null,
         UriInterface $resourceUri = null
     ) {
         $this->httpClient = $httpClient;
+        $this->iteratorFactory = $iteratorFactory;
         $this->modelFactory = $modelFactory;
         $this->collectionFactory = $collectionFactory;
         $this->resourceUri = $resourceUri;
@@ -315,7 +324,7 @@ abstract class AbstractHttpResource implements HttpResourceInterface
      */
     public function getIterator(): Traversable
     {
-        return new \Totallywicked\DevTest\Model\ResourceIterator($this);
+        return $this->iteratorFactory->make(['resource' => $this]);
     }
 
     /**

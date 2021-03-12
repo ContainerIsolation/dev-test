@@ -4,6 +4,7 @@ namespace Totallywicked\DevTest\Model\Resource\Collection;
 use Totallywicked\DevTest\Exception\InvalidArgumentException;
 use Totallywicked\DevTest\Exception\NotFoundException;
 use Totallywicked\DevTest\Model\Resource\AbstractHttpResource;
+use Totallywicked\DevTest\Factory\FactoryInterface;
 use \Traversable;
 
 /**
@@ -17,6 +18,12 @@ abstract class AbstractHttpPaginatedCollection implements HttpPaginatedCollectio
      * @var AbstractHttpResource
      */
     protected $resource;
+
+    /**
+     * Set to the collection factory for this resource.
+     * @var FactoryInterface
+     */
+    protected $iteratorFactory;
 
     /**
      * The query filters behind this collection,
@@ -47,11 +54,17 @@ abstract class AbstractHttpPaginatedCollection implements HttpPaginatedCollectio
     /**
      * Constructor
      * @param AbstractHttpResource $resource
+     * @param FactoryInterface $iteratorFactory
      * @param array $query
      */
-    public function __construct(AbstractHttpResource $resource, array $query = []) {
+    public function __construct(
+        AbstractHttpResource $resource,
+        FactoryInterface $iteratorFactory,
+        array $query = []
+    ) {
         // Remove page from query, we manage it separately.
         $this->query = array_merge([], $query, ['page' => null]);
+        $this->iteratorFactory = $iteratorFactory;
         $this->resource = $resource;
     }
 
@@ -120,7 +133,7 @@ abstract class AbstractHttpPaginatedCollection implements HttpPaginatedCollectio
      */
     public function getIterator(): Traversable
     {
-        return new \Totallywicked\DevTest\Model\ResourceIterator($this);
+        return $this->iteratorFactory->make(['resource' => $this]);
     }
 
     /**

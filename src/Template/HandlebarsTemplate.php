@@ -45,7 +45,7 @@ class HandlebarsTemplate
      * @param string $viewDirectory
      * @param array $data
      */
-    public function __construct(string $viewDirectory = null, array $data = []) {
+    public function __construct(string $viewDirectory, array $data = []) {
         $this->viewDirectory = $viewDirectory;
         $this->data = [];
     }
@@ -73,7 +73,7 @@ class HandlebarsTemplate
      * @return self
      * @throws NotFoundException When the filename does not exist
      */
-    function setTemplate(array $filename): self
+    function setTemplate(string $filename): self
     {
         $this->template = $this->getTemplate($filename);
         return $this;
@@ -85,7 +85,7 @@ class HandlebarsTemplate
      * @return self
      * @throws NotFoundException When the filename does not exist
      */
-    function setLayout(array $filename): self
+    function setLayout(string $filename): self
     {
         $this->layout = $this->getTemplate($filename);
         return $this;
@@ -99,7 +99,7 @@ class HandlebarsTemplate
     function render(): string
     {
         $this->prepare();
-        return ($this->renderTemplate)($data);
+        return ($this->renderTemplate)($this->data);
     }
 
     /**
@@ -108,10 +108,10 @@ class HandlebarsTemplate
      */
     protected function prepare()
     {
-        if ($this->layout) {
+        if ($this->layout === null || $this->layout === false) {
             throw new \Exception("Cannot prepare the template, no layout file provided");
         }
-        if ($this->template) {
+        if ($this->template === null || $this->template === false) {
             throw new \Exception("Cannot prepare the template, no template file provided");
         }
         if ($this->renderTemplate === null) {
@@ -135,9 +135,11 @@ class HandlebarsTemplate
      */
     protected function getTemplate($filename): string
     {
-        $data = @file_get_contents($filename);
+        $path = $this->viewDirectory . "/$filename.hbs";
+        $realPath = realpath($this->viewDirectory . "/$filename.hbs");
+        $data = @file_get_contents($path);
         if ($data === false || $data === null) {
-            throw new NotFoundException("Could not find the template file $filename");
+            throw new NotFoundException("Could not find the template file \"$path\"");
         }
         return $data;
     }

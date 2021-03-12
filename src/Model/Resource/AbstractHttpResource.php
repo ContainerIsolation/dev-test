@@ -250,7 +250,7 @@ abstract class AbstractHttpResource implements HttpResourceInterface
                 $result[$entry['id']] = $this->modelFactory->make(['data' => $entry]);
             }
         }
-        else if (isset($data[$firstId]) && isset($data[$firstId]['id'])) {
+        elseif (isset($data[$firstId]) && isset($data[$firstId]['id'])) {
             foreach ($data as $entry) {
                 $result[$entry['id']] = $this->modelFactory->make(['data' => $entry]);
             }
@@ -276,7 +276,7 @@ abstract class AbstractHttpResource implements HttpResourceInterface
                 $this->cache[$entry['id']] = $entry;
             }
         }
-        else if (isset($response[0]) && isset($response[0]['id'])) {
+        elseif (isset($response[0]) && isset($response[0]['id'])) {
             foreach ($response as $entry) {
                 $this->cache[$entry['id']] = $entry;
             }

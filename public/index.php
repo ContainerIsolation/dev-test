@@ -55,13 +55,10 @@ $emitter = $container->get(\Laminas\HttpHandlerRunner\Emitter\SapiEmitter::class
 $request = Laminas\Diactoros\ServerRequestFactory::fromGlobals(
     $_SERVER, $_GET, $_POST, $_COOKIE, $_FILES
 );
-$action = $router->match($request);
 try {
-    $response = $action->handle($request);
+    $response = $router->handle($request);
     $emitter->emit($response);
 } catch (\Throwable $th) {
-    $errorHandler = $router->getErrorHandler();
-    $errorHandler->setError($th);
-    $response = $errorHandler->handle($request);
+    $response = $router->handleError($request->withAttribute('error', $th));
     $emitter->emit($response);
 }

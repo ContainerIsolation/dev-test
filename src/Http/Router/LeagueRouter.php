@@ -5,6 +5,7 @@ use Psr\Container\ContainerInterface;
 use Totallywicked\DevTest\Exception\InvalidArgumentException;
 use Totallywicked\DevTest\Exception\NotFoundException;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 use League\Route\Strategy\ApplicationStrategy;
 use League\Route\Router;
@@ -56,36 +57,42 @@ class LeagueRouter implements RouterInterface
     /**
      * @inheritDoc
      */
-    function match(ServerRequestInterface $request): RequestHandlerInterface
+    public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $router = $this->getRouter();
         try {
             return $router->dispatch($request);
         } catch (\League\Route\Http\Exception\NotFoundException $th) {
-            if ($this->notFoundHandler) {
-                return $this->notFoundHandler;
+            try {
+                return $this->handleNotFound($request);
+            } catch (\Throwable $th) {
+                return $this->handleError($request->withAttribute('error', $th));
             }
+        } catch (\Throwable $th) {
+            return $this->handleError($request->withAttribute('error', $th));
         }
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function handleNotFound(ServerRequestInterface $request): ResponseInterface
+    {
+        if ($this->notFoundHandler) {
+            return $this->notFoundHandler->handle($request);
+        }
+        throw new \NotFoundException("Not found handler is not configured");
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function handleError(ServerRequestInterface $request): ResponseInterface
+    {
         if ($this->errorHandler) {
-            $this->errorHandler->setError();
-            return $this->errorHandler;
+            return $this->errorHandler->handle($request);
         }
-    }
-
-    /**
-     * @inheritDoc
-     */
-    function getNotFoundHandler(): RequestHandlerInterface
-    {
-        return $this->notFoundHandler;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    function getErrorHandler(): RequestHandlerInterface
-    {
-        return $this->errorHandler;
+        throw new \NotFoundException("Error handler is not configured");
     }
 
     /**

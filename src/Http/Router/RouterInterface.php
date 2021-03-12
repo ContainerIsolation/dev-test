@@ -4,6 +4,7 @@ namespace Totallywicked\DevTest\Http\Router;
 use Totallywicked\DevTest\Exception\InvalidArgumentException;
 use Totallywicked\DevTest\Exception\NotFoundException;
 use Psr\Http\Message\ServerRequestInterface;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
 /**
@@ -13,30 +14,32 @@ use Psr\Http\Server\RequestHandlerInterface;
 interface RouterInterface
 {
     /**
-     * Matches the given request against the list of configured routes.
+     * Handles the given request.
      * @param ServerRequestInterface $request
-     * @return RequestHandlerInterface
-     * @throws InvalidArgumentException When $uri is invalid
-     * @throws NotFoundException When the requested action handler does not exist
+     * @return ResponseInterface
+     * @throws InvalidArgumentException When $request is invalid
+     * @throws NotFoundException When the requested handler does not exist
      * @throws \Exception When we don't know what happened
      */
-    function match(ServerRequestInterface $request): RequestHandlerInterface;
+    function handle(ServerRequestInterface $request): ResponseInterface;
 
     /**
-     * Returns a not found 404 handler if configured,
-     * otherwise throws an exception.
-     * @return RequestHandlerInterface
-     * @throws NotFoundException When the requested action handler does not exist
+     * Handles 404 or throws an exception if not configured.
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws InvalidArgumentException When $request is invalid
+     * @throws NotFoundException When the requested handler does not exist
      * @throws \Exception When we don't know what happened
      */
-    function getNotFoundHandler(): RequestHandlerInterface;
+    function handleNotFound(ServerRequestInterface $request): ResponseInterface;
 
     /**
-     * Returns an error 500 handler if configured,
-     * otherwise throws an exception.
-     * @return RequestHandlerInterface
-     * @throws NotFoundException When the requested action handler does not exist
+     * Handles 500 or throws an exception if not configured.
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     * @throws InvalidArgumentException When $request is invalid
+     * @throws NotFoundException When the requested handler does not exist
      * @throws \Exception When we don't know what happened
      */
-    function getErrorHandler(): RequestHandlerInterface;
+    function handleError(ServerRequestInterface $request): ResponseInterface;
 }

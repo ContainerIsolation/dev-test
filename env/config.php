@@ -16,14 +16,19 @@ return [
         'locationPath' => '/api/location'
     ],
     'directory' => [
-        'view' => dirname(__DIR__) . "/src/view",
+        'view' => dirname(__DIR__) . '/src/view',
     ],
     \Totallywicked\DevTest\Http\Router\RouterInterface::class => autowire(\Totallywicked\DevTest\Http\Router\LeagueRouter::class)
         ->constructorParameter('notFoundHandler', get(\Totallywicked\DevTest\Action\NotFoundAction::class))
         ->constructorParameter('errorHandler', get(\Totallywicked\DevTest\Action\ErrorAction::class))
         ->constructorParameter('configuration', [
-            'GET' => []
+            'GET' => [
+                '/' => autowire(\Totallywicked\DevTest\Action\PageAction::class)
+                    ->constructorParameter('templateFile', 'index')
+                    ->constructorParameter('layoutFile', 'layout/standard')
+                    ->constructorParameter('title', 'Home')
+            ]
         ]),
     \Totallywicked\DevTest\Template\HandlebarsTemplate::class => autowire(\Totallywicked\DevTest\Template\HandlebarsTemplate::class)
-        ->constructorParameter('viewDirectory', dirname(__DIR__) . "/src/view")
+        ->constructorParameter('viewDirectory', dirname(__DIR__) . '/src/view')
 ];

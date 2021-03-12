@@ -109,4 +109,26 @@ abstract class AbstractModel implements ModelInterface
     {
         $this->data = json_decode($serialized, TRUE);
     }
+
+    /**
+     * A hacked together method to extract IDs from urls.
+     * @param array $urls
+     * @return array
+     */
+    protected function getIdsFromUrls(array $urls)
+    {
+        $ids = [];
+        foreach ($urls as $url) {
+            $matches = [];
+            $result = preg_match('/.+\/([0-9]+)$/', $url, $matches);
+            if ($result === 0 || $result === false) {
+                continue;
+            }
+            $ids[] = $matches['1'];
+        }
+        if (count($ids) === 1) {
+            return $ids[0];
+        }
+        return $ids;
+    }
 }

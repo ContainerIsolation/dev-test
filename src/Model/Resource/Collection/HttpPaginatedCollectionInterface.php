@@ -17,7 +17,7 @@ interface HttpPaginatedCollectionInterface extends \Countable, \IteratorAggregat
      * @return array
      * @throws InvalidArgumentException When $page is invalid
      * @throws NotFoundException When the requested page does not exist
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
     function getPage(int $page): array;
 
@@ -25,7 +25,7 @@ interface HttpPaginatedCollectionInterface extends \Countable, \IteratorAggregat
      * Returns the number of pages for this resource.
      * @return int
      * @throws NotFoundException When the requested resource does not exist
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
     function getNumberOfPages(): int;
 
@@ -34,7 +34,7 @@ interface HttpPaginatedCollectionInterface extends \Countable, \IteratorAggregat
      * This method can throw errors while count() will return 0.
      * @return int
      * @throws NotFoundException When the requested resource does not exist
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
     function getNumberOfItems(): int;
 }

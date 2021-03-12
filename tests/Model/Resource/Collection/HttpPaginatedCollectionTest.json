@@ -1,0 +1,131 @@
+{
+    "https://rickandmortyapi.com/api/character": {
+        "code": 200,
+        "content": {
+            "info": {
+                "count": 671,
+                "pages": 34,
+                "next": "https://rickandmortyapi.com/api/character?page=2",
+                "prev": null
+            },
+            "results": []
+        }
+    },
+    "https://rickandmortyapi.com/api/character?name=Morty": {
+        "code": 200,
+        "content": {
+            "info": {
+                "count": 54,
+                "pages": 2,
+                "next": "https://rickandmortyapi.com/api/character?page=2&name=Morty",
+                "prev": null
+            },
+            "results": [
+                {
+                    "id": 1,
+                    "name": "Morty Smith",
+                    "status": "Alive",
+                    "species": "Human",
+                    "type": "",
+                    "gender": "Male",
+                    "origin": {
+                        "name": "Earth (C-137)",
+                        "url": "https://rickandmortyapi.com/api/location/1"
+                    },
+                    "location": {
+                        "name": "Earth (Replacement Dimension)",
+                        "url": "https://rickandmortyapi.com/api/location/20"
+                    },
+                    "image": "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+                    "episode": [
+                        "https://rickandmortyapi.com/api/episode/1"
+                    ],
+                    "url": "https://rickandmortyapi.com/api/character/2",
+                    "created": "2017-11-04T18:50:21.651Z"
+                }
+            ]
+        }
+    },
+    "https://rickandmortyapi.com/api/character?name=Morty&page=1": {
+        "code": 200,
+        "content": {
+            "info": {
+                "count": 54,
+                "pages": 2,
+                "next": "https://rickandmortyapi.com/api/character?page=2&name=Morty",
+                "prev": null
+            },
+            "results": [
+                {
+                    "id": 1,
+                    "name": "Morty Smith",
+                    "status": "Alive",
+                    "species": "Human",
+                    "type": "",
+                    "gender": "Male",
+                    "origin": {
+                        "name": "Earth (C-137)",
+                        "url": "https://rickandmortyapi.com/api/location/1"
+                    },
+                    "location": {
+                        "name": "Earth (Replacement Dimension)",
+                        "url": "https://rickandmortyapi.com/api/location/20"
+                    },
+                    "image": "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+                    "episode": [
+                        "https://rickandmortyapi.com/api/episode/1"
+                    ],
+                    "url": "https://rickandmortyapi.com/api/character/2",
+                    "created": "2017-11-04T18:50:21.651Z"
+                }
+            ]
+        }
+    },
+    "https://rickandmortyapi.com/api/character?name=Morty&page=2": {
+        "code": 200,
+        "content": {
+            "info": {
+                "count": 54,
+                "pages": 2,
+                "next": "https://rickandmortyapi.com/api/character?page=2&name=Morty",
+                "prev": null
+            },
+            "results": [
+                {
+                    "id": 11,
+                    "name": "Morty Smith",
+                    "status": "Alive",
+                    "species": "Human",
+                    "type": "",
+                    "gender": "Male",
+                    "origin": {
+                        "name": "Earth (C-137)",
+                        "url": "https://rickandmortyapi.com/api/location/1"
+                    },
+                    "location": {
+                        "name": "Earth (Replacement Dimension)",
+                        "url": "https://rickandmortyapi.com/api/location/20"
+                    },
+                    "image": "https://rickandmortyapi.com/api/character/avatar/2.jpeg",
+                    "episode": [
+                        "https://rickandmortyapi.com/api/episode/1"
+                    ],
+                    "url": "https://rickandmortyapi.com/api/character/2",
+                    "created": "2017-11-04T18:50:21.651Z"
+                }
+            ]
+        }
+    },
+    "https://rickandmortyapi.com/api/character?name=Morty&page=41": {
+        "code": 404,
+        "content": {
+            "error": "There is nothing here"
+        }
+    },
+    "https://rickandmortyapi.com/api/character?name=Morty&page=404": {
+        "code": 404,
+        "content": {
+            "error": "There is nothing here"
+        }
+    }
+}

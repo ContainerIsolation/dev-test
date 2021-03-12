@@ -59,8 +59,9 @@ class SearchAggregator
      * @return array
      * @throws OutOfBoundsException When the page argument is invalid
      */
-    public function search($query, $page = 1, $pageSize = 10)
+    public function search($query, $page = 1, $pageSize = 20)
     {
+        $requestStartTime = hrtime(true);
         $totalItems = 0;
         $totalPages = 0;
         $resultItems = [];
@@ -94,11 +95,26 @@ class SearchAggregator
 
         // Compute the number of items, and starting positions for each collection
         foreach ($collections as $key => $collection) {
-            $totalItems += $collection['collection']->getNumberOfItems();
+            $totalItems += count($collection['collection']);
             $collections[$key]['end'] = $totalItems;
             if (isset($collections[$key+1])) {
                 $collections[$key+1]['start'] = $totalItems;
             }
+        }
+
+        // Not found anything
+        if ($totalItems < 1) {
+            $requestEndTime = hrtime(true);
+            return [
+                'totalItems' => 0,
+                'totalPages' => 0,
+                'requestTime' => ($requestEndTime - $requestStartTime) / 1e+6, // Milliseconds
+                'previousPage' => null,
+                'currentPage' => $page,
+                'nextPage' => null,
+                'currentPageCount' => 0,
+                'result' => []
+            ];
         }
 
         // Total number of pages
@@ -106,7 +122,7 @@ class SearchAggregator
 
         // Out of bounds check
         if ($page > $totalPages) {
-            throw new OutOfBoundsException("Page must be less than $totalItems");
+            throw new OutOfBoundsException("Page must be less than $totalPages");
         }
 
         // Start index
@@ -130,12 +146,15 @@ class SearchAggregator
             }
         }
 
+        $requestEndTime = hrtime(true);
         return [
             'totalItems' => $totalItems,
             'totalPages' => $totalPages,
+            'requestTime' => ($requestEndTime - $requestStartTime) / 1e+6, // Milliseconds
             'previousPage' => $page > 1 ? $page - 1 : null,
             'currentPage' => $page,
             'nextPage' => $page < $totalPages ? $page + 1 : null,
+            'currentPageCount' => count($resultItems),
             'result' => $resultItems
         ];
     }

@@ -33,10 +33,23 @@ class LocationProvider implements DataProviderInterface
         $locationData = $location->getData();
         $locationData['residents'] = [];
         foreach ($location->getResidents() as $location) {
-            $locationData['residents'][] = $location->getData();
+            $locationData['residents'][] = $this->getNestedData($location);
         }
         return [
             'location' => $locationData
         ];
+    }
+
+    /**
+     * Safely returns nested data
+     * @param Model|null $model
+     * @return array|null
+     */
+    public function getNestedData($model)
+    {
+        if ($model !== null) {
+            return $model->getData();
+        }
+        return null;
     }
 }

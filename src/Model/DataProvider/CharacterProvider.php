@@ -31,14 +31,27 @@ class CharacterProvider implements DataProviderInterface
         $id = $data['request']->getAttribute('id');
         $character = $this->characterResource->getById($id);
         $characterData = $character->getData();
-        $characterData['origin'] = $character->getOrigin()->getData();
-        $characterData['location'] = $character->getLocation()->getData();
+        $characterData['origin'] = $this->getNestedData($character->getOrigin());
+        $characterData['location'] = $this->getNestedData($character->getLocation());
         $characterData['episode'] = [];
         foreach ($character->getEpisodes() as $episode) {
-            $characterData['episode'][] = $episode->getData();
+            $characterData['episode'][] = $this->getNestedData($episode);
         }
         return [
             'character' => $characterData
         ];
+    }
+
+    /**
+     * Safely returns nested data
+     * @param Model|null $model
+     * @return array|null
+     */
+    public function getNestedData($model)
+    {
+        if ($model !== null) {
+            return $model->getData();
+        }
+        return null;
     }
 }

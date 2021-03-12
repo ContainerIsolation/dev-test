@@ -7,6 +7,7 @@ use Totallywicked\DevTest\Exception\NotFoundException;
 use Totallywicked\DevTest\Model\Resource\AbstractHttpResource;
 use Totallywicked\DevTest\Model\ModelInterface;
 use Totallywicked\DevTest\Factory\FactoryInterface;
+use Totallywicked\DevTest\Model\ResourceIteratorFactory;
 use \Traversable;
 
 /**
@@ -23,7 +24,7 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
 
     /**
      * Set to the collection factory for this resource.
-     * @var FactoryInterface
+     * @var ResourceIteratorFactory
      */
     protected $iteratorFactory;
 
@@ -61,13 +62,13 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
 
     /**
      * Constructor
+     * @param ResourceIteratorFactory $iteratorFactory
      * @param AbstractHttpResource $resource
-     * @param FactoryInterface $iteratorFactory
      * @param array $query
      */
     public function __construct(
-        AbstractHttpResource $resource,
-        FactoryInterface $iteratorFactory,
+        ResourceIteratorFactory $iteratorFactory,
+        AbstractHttpResource $resource = null,
         array $query = []
     ) {
         // Remove page from query, we manage it separately.

@@ -33,10 +33,23 @@ class EpisodeProvider implements DataProviderInterface
         $episodeData = $episode->getData();
         $episodeData['characters'] = [];
         foreach ($episode->getCharacters() as $episode) {
-            $episodeData['characters'][] = $episode->getData();
+            $episodeData['characters'][] = $this->getNestedData($episode);
         }
         return [
             'episode' => $episodeData
         ];
+    }
+
+    /**
+     * Safely returns nested data
+     * @param Model|null $model
+     * @return array|null
+     */
+    public function getNestedData($model)
+    {
+        if ($model !== null) {
+            return $model->getData();
+        }
+        return null;
     }
 }

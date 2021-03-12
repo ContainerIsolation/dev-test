@@ -11,6 +11,8 @@ fi
 
 CLASS_NAME="${FQN##*\\}"
 NAMESPACE="${FQN%\\*}"
+FILENAME="${FQN##Totallywicked\\DevTest\\}"
+FILENAME="src/${FILENAME//\\/\/}Factory.php"
 
 echo "\
 <?php
@@ -27,4 +29,4 @@ class ${CLASS_NAME}Factory extends AbstractFactory
      * @inheritDoc
      */
     protected \$className = $CLASS_NAME::class;
-}"
+}" > $FILENAME

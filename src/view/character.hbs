@@ -1,0 +1,31 @@
+<h1>{{character.name}}</h1>
+<img src="{{character.image}}" alt="{{character.name}} image">
+
+<h2>General information</h2>
+<ul>
+    <li>Origin: <a href="/location/{{character.origin.id}}">{{character.origin.name}}</a></li>
+    <li>Last location: <a href="/location/{{character.location.id}}">{{character.location.name}}</a></li>
+    <li>Species: {{character.species}}</li>
+    <li>Gender: {{character.gender}}</li>
+</ul>
+
+<h2>Episodes</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Episode name</th>
+            <th>Episode air date</th>
+        </tr>
+    </thead>
+    <tbody>
+        {{#each character.episode}}
+        <tr>
+            <th><a href="/episode/{{id}}">{{name}}</a></th>
+            <th>{{air_date}}</th>
+        </tr>
+        {{/each}}
+    </tbody>
+</table>
+<footer>
+    <a href="/">Home</a>
+</footer>

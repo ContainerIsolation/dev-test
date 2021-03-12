@@ -1,0 +1,18 @@
+<h1>{{location.name}}</h1>
+
+<h2>General information</h2>
+<ul>
+    <li>Name: {{location.name}}</li>
+    <li>Dimension: {{location.dimension}}</li>
+</ul>
+
+<h2>Residents</h2>
+<ul>
+    {{#each location.residents}}
+    <li><a href="/character/{{id}}">{{name}}</a></li>
+    {{/each}}
+</ul>
+
+<footer>
+    <a href="/">Home</a>
+</footer>

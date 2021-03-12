@@ -1,7 +1,7 @@
 <?php
 namespace Totallywicked\DevTest\Model\Resource;
 
-use Totallywicked\DevTest\Model\Resource\Collection\HttpPaginatedCollection;
+use Totallywicked\DevTest\Model\Resource\Collection\HttpPaginatedCollectionInterface;
 use Totallywicked\DevTest\Exception\InvalidArgumentException;
 use Totallywicked\DevTest\Exception\NotFoundException;
 
@@ -14,20 +14,23 @@ interface HttpResourceInterface extends \Countable, \IteratorAggregate, \ArrayAc
     /**
      * Look up the resource by its id.
      * @param string $id
-     * @return array
+     * @return object
      * @throws InvalidArgumentException When one of the arguments is invalid
      * @throws NotFoundException When no resources was returned
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
-    function getById(string $id): array;
+    function getById(string $id): object;
 
     /**
      * Like getById but can return multiple resources.
+     * Non existing ids will not be returned in the array.
+     * It is possible to receive empty array, it is important to check both
+     * for NotFoundException and empty array.
      * @param array $ids
      * @return array - returns array of arrays
      * @throws InvalidArgumentException When one of the arguments is invalid
      * @throws NotFoundException When no resources was returned
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
     function getByIds(array $ids): array;
 
@@ -36,19 +39,19 @@ interface HttpResourceInterface extends \Countable, \IteratorAggregate, \ArrayAc
      * Instead of returning an array it returns a collection
      * that can be used to request more resources.
      * @param array $query - Map of filters in a format: [string => string, ...]
-     * @return HttpPaginatedCollection
+     * @return HttpPaginatedCollectionInterface
      * @throws InvalidArgumentException When one of the arguments is invalid
      * @throws NotFoundException When no resources was returned
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
-    function search(string $query): HttpPaginatedCollection;
+    function search(array $query): HttpPaginatedCollectionInterface;
 
     /**
      * Returns the size of the resource, alias of count() with one exception.
      * This method can throw errors while count() will return 0.
      * @return int
      * @throws NotFoundException When the requested resource does not exist
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
     function getNumberOfItems(): int;
 }

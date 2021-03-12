@@ -159,7 +159,6 @@ final class HttpPaginatedCollectionTest extends TestCase
         // Request URL to data map
         $map = self::$data;
         $callback = function ($uri) use ($map) {
-            var_dump((string) $uri);
             foreach ($map as $key => $value) {
                 if ($key === (string) $uri) {
                     return $this->createMockedHttpResponse($value['code'], json_encode($value['content']));

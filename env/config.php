@@ -29,10 +29,14 @@ function pageAction($dataProvider = null, $title, $templateFile = '', $layoutFil
 function resource($className, $uri)
 {
     $uriFactory = new \Laminas\Diactoros\UriFactory();
-    return autowire($className)->constructorParameter('resourceUri', $uriFactory->createUri($uri));
+    return autowire($className)
+        ->constructorParameter('resourceUri', $uriFactory->createUri($uri))
+        ->constructorParameter('throttle', 1); // Throttle requests by 1 second
 }
 
 return [
+    \Totallywicked\DevTest\Model\Resource\Collection\HttpPaginatedCollectionInterface::class =>
+        autowire(\Totallywicked\DevTest\Model\Resource\Collection\HttpPaginatedCollection::class),
     \Psr\Http\Message\UriFactoryInterface::class => get(\Laminas\Diactoros\UriFactory::class),
     \GuzzleHttp\ClientInterface::class => get(\GuzzleHttp\Client::class),
     \Totallywicked\DevTest\Http\Router\RouterInterface::class =>
@@ -56,6 +60,11 @@ return [
                         \Totallywicked\DevTest\Model\DataProvider\EpisodeProvider::class,
                         "Episode",
                         "episode"
+                    ),
+                    '/search' => pageAction(
+                        \Totallywicked\DevTest\Model\DataProvider\SearchProvider::class,
+                        "Search Results",
+                        "search"
                     )
                 ]
             ]),

@@ -19,18 +19,23 @@ class CharacterResource extends AbstractHttpResource
      * @param CharacterFactory $modelFactory
      * @param HttpPaginatedCollectionInterfaceFactory $collectionFactory
      * @param UriInterface $resourceUri
+     * @param int $throttle
      */
     public function __construct(
         ClientInterface $httpClient,
         ResourceIteratorFactory $iteratorFactory,
         CharacterFactory $modelFactory,
-        HttpPaginatedCollectionInterfaceFactory $collectionFactory = null,
-        UriInterface $resourceUri = null
+        HttpPaginatedCollectionInterfaceFactory $collectionFactory,
+        UriInterface $resourceUri = null,
+        int $throttle = 0
     ) {
-        $this->httpClient = $httpClient;
-        $this->iteratorFactory = $iteratorFactory;
-        $this->modelFactory = $modelFactory;
-        $this->collectionFactory = $collectionFactory;
-        $this->resourceUri = $resourceUri;
+        parent::__construct(
+            $httpClient,
+            $iteratorFactory,
+            $modelFactory,
+            $collectionFactory,
+            $resourceUri,
+            $throttle
+        );
     }
 }

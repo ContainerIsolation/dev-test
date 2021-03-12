@@ -201,7 +201,7 @@ final class SearchAggregatorTest extends TestCase
                 ->enableOriginalClone()
                 ->disableArgumentCloning()
                 ->disableAutoReturnValueGeneration(),
-            ['resource', $iteratorFactory, 'query'],
+            [$iteratorFactory, 'resource', 'query'],
             true,
             HttpPaginatedCollectionInterfaceFactory::class
         );

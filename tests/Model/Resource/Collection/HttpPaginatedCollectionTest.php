@@ -7,6 +7,7 @@ use Totallywicked\DevTest\Model\Resource\HttpResourceInterface;
 use Totallywicked\DevTest\Model\Resource\AbstractHttpResource;
 use Totallywicked\DevTest\Model\AbstractModel;
 use Totallywicked\DevTest\Model\ResourceIterator;
+use Totallywicked\DevTest\Model\ResourceIteratorFactory;
 use Totallywicked\DevTest\Factory\FactoryInterface;
 use PHPUnit\Framework\MockObject\MockBuilder;
 use Laminas\Diactoros\UriFactory;
@@ -134,7 +135,8 @@ final class HttpPaginatedCollectionTest extends TestCase
                 ->disableArgumentCloning()
                 ->disableAutoReturnValueGeneration(),
             ['resource'],
-            true
+            true,
+            ResourceIteratorFactory::class
         );
         $this->resource = $this->getMockForAbstractClass(AbstractHttpResource::class, [
                 $this->createMockedHttpClient(),
@@ -152,7 +154,7 @@ final class HttpPaginatedCollectionTest extends TestCase
                         ->enableOriginalClone()
                         ->disableArgumentCloning()
                         ->disableAutoReturnValueGeneration(),
-                    ['resource', $iteratorFactory, 'query'],
+                    [$iteratorFactory, 'resource', 'query'],
                     true
                 ),
                 $uriFactory->createUri('https://rickandmortyapi.com/api/character')
@@ -201,9 +203,13 @@ final class HttpPaginatedCollectionTest extends TestCase
      * @param MockBuilder
      * @return FactoryInterface
      */
-    protected function createMockedFactory($mockBuilder, $argsToIndex = [], $isAbstract = false)
-    {
-        $mock = $this->getMockBuilder(FactoryInterface::class)
+    protected function createMockedFactory(
+        $mockBuilder,
+        $argsToIndex = [],
+        $isAbstract = false,
+        $factoryClass = FactoryInterface::class
+    ) {
+        $mock = $this->getMockBuilder($factoryClass)
             ->disableOriginalConstructor()
             ->disableOriginalClone()
             ->disableArgumentCloning()
@@ -213,13 +219,17 @@ final class HttpPaginatedCollectionTest extends TestCase
             use ($mockBuilder, $argsToIndex, $isAbstract)
         {
             $args = [];
-            foreach ($argsToIndex as $key) {
-                if (is_string($key) && isset($factoryArgs[$key])) {
-                    $args[] = $factoryArgs[$key];
-                } elseif (!is_string($key)) {
-                    $args[] = $key;
-                } else {
-                    $args[] = null;
+            if (is_callable($argsToIndex)) {
+                $args = $argsToIndex($factoryArgs);
+            } else {
+                foreach ($argsToIndex as $key) {
+                    if (is_string($key) && isset($factoryArgs[$key])) {
+                        $args[] = $factoryArgs[$key];
+                    } elseif (!is_string($key)) {
+                        $args[] = $key;
+                    } else {
+                        $args[] = null;
+                    }
                 }
             }
             if ($isAbstract) {

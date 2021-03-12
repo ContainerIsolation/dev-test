@@ -3,8 +3,18 @@
 
 <h2>General information</h2>
 <ul>
+    {{#if character.origin}}
     <li>Origin: <a href="/location/{{character.origin.id}}">{{character.origin.name}}</a></li>
+    {{/if}}
+    {{#unless character.origin}}
+    <li>Origin: Unknown</li>
+    {{/unless}}
+    {{#if character.location}}
     <li>Last location: <a href="/location/{{character.location.id}}">{{character.location.name}}</a></li>
+    {{/if}}
+    {{#unless character.location}}
+    <li>Last location: Unknown</li>
+    {{/unless}}
     <li>Species: {{character.species}}</li>
     <li>Gender: {{character.gender}}</li>
 </ul>

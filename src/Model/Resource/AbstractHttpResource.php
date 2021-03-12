@@ -47,6 +47,12 @@ abstract class AbstractHttpResource implements HttpResourceInterface
     protected $collectionFactory;
 
     /**
+     * Requests will be throttled by this number
+     * @param int
+     */
+    protected $throttle;
+
+    /**
      * Cached data returned from the resource. 
      * @param array[array] - [string => array]
      */
@@ -71,19 +77,22 @@ abstract class AbstractHttpResource implements HttpResourceInterface
      * @param FactoryInterface $modelFactory
      * @param FactoryInterface $collectionFactory
      * @param UriInterface $resourceUri
+     * @param int $throttle
      */
     public function __construct(
         ClientInterface $httpClient,
         FactoryInterface $iteratorFactory,
         FactoryInterface $modelFactory = null,
         FactoryInterface $collectionFactory = null,
-        UriInterface $resourceUri = null
+        UriInterface $resourceUri = null,
+        int $throttle = 0
     ) {
         $this->httpClient = $httpClient;
         $this->iteratorFactory = $iteratorFactory;
         $this->modelFactory = $modelFactory;
         $this->collectionFactory = $collectionFactory;
         $this->resourceUri = $resourceUri;
+        $this->throttle = $throttle;
     }
 
     /**
@@ -225,7 +234,14 @@ abstract class AbstractHttpResource implements HttpResourceInterface
         if (!is_a($url, UriInterface::class) && !is_string($url)) {
             throw new InvalidArgumentException('$url must be a string or UriInterface');
         }
-        $response = $this->httpClient->get($url);
+        if ($this->throttle > 0) {
+            sleep($this->throttle);
+        }
+        try {
+            $response = $this->httpClient->get($url);
+        } catch (\GuzzleHttp\Exception\ClientException $clientException) {
+            $response = $clientException->getResponse();
+        }
         if ($response->getStatusCode() === 404) {
             throw new NotFoundException(sprintf("%s not found", (string) $url));
         }

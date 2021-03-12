@@ -1,10 +1,9 @@
 <?php
 namespace Totallywicked\DevTest\Model\Resource\Collection;
 
-use Totallywicked\DevTest\Exception\InvalidArgumentException;
+use Totallywicked\DevTest\Exception\OutOfBoundsException;
 use Totallywicked\DevTest\Exception\NotFoundException;
-
-// OutOfBoundsException - use this maybe?
+use Totallywicked\DevTest\Model\ModelInterface;
 
 /**
  * A simple model for accessing paginated resources.
@@ -14,12 +13,22 @@ interface HttpPaginatedCollectionInterface extends \Countable, \IteratorAggregat
     /**
      * Requests specific page from the paginated resource.
      * @param int $page
-     * @return array
-     * @throws InvalidArgumentException When $page is invalid
+     * @return array[ModelInterface]
+     * @throws OutOfBoundsException When $page is invalid
      * @throws NotFoundException When the requested page does not exist
      * @throws \Exception When we don't know what happened
      */
     function getPage(int $page): array;
+
+    /**
+     * Returns a specific item by the index from the query.
+     * @param int $index
+     * @return ModelInterface
+     * @throws OutOfBoundsException When $index is invalid
+     * @throws NotFoundException When the requested page does not exist
+     * @throws \Exception When we don't know what happened
+     */
+    function getItem(int $index): ModelInterface;
 
     /**
      * Returns the number of pages for this resource.

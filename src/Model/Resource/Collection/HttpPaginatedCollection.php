@@ -2,8 +2,10 @@
 namespace Totallywicked\DevTest\Model\Resource\Collection;
 
 use Totallywicked\DevTest\Exception\InvalidArgumentException;
+use Totallywicked\DevTest\Exception\OutOfBoundsException;
 use Totallywicked\DevTest\Exception\NotFoundException;
 use Totallywicked\DevTest\Model\Resource\AbstractHttpResource;
+use Totallywicked\DevTest\Model\ModelInterface;
 use Totallywicked\DevTest\Factory\FactoryInterface;
 use \Traversable;
 
@@ -45,11 +47,17 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
     protected $countItems;
 
     /**
-     * Stores the size of a single page
-     * Hardcoded to 10 for performance reasons and because it is valid for rickandmortyapi
+     * Local cache for this collection
      * @var array
      */
-    protected $pageSize = 10;
+    protected $queryItemCache;
+
+    /**
+     * Stores the size of a single page
+     * Hardcoded to 20 for performance reasons and because it is valid for rickandmortyapi
+     * @var array
+     */
+    protected $pageSize = 20;
 
     /**
      * Constructor
@@ -71,11 +79,40 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
     /**
      * @inheritDoc
      */
-    function getPage(int $page): array
+    function getPage(int $page = 1): array
     {
+        // Check bounds
+        $max = $this->getNumberOfPages();
+        if ($page < 1 || $page > $max) {
+            throw new OutOfBoundsException(sprintf("Page is smaller than 1 or bigger than %d", $max));
+        }
         $query = array_merge([], $this->query, ['page' => $page]);
         $result = $this->fetch($query);
         return $result['results'];
+    }
+
+    /**
+     * @inheritDoc
+     */
+    function getItem(int $index): ModelInterface
+    {
+        // Check bounds
+        $numberOfItems = $this->getNumberOfItems();
+        if ($index < 0 || $index >= $numberOfItems) {
+            throw new OutOfBoundsException(sprintf("Index is smaller than 0 or bigger than %d", $numberOfItems - 1));
+        }
+        // Check if we have this item the cache
+        if (isset($this->queryItemCache[$index])) {
+            return $this->queryItemCache[$index];
+        }
+        // Find on which page we can find this item
+        $page = ceil(($index + 1) / $this->pageSize);
+        $this->getPage($page);
+        // We should find the result in our cache
+        if (isset($this->queryItemCache[$index])) {
+            return $this->queryItemCache[$index];
+        }
+        throw new NotFoundException("Could not find the item at the index: $index");
     }
 
     /**
@@ -101,7 +138,7 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
     }
 
     /**
-     * Fetches the query from the resource.
+     * Fetches the query from the resource and caches the results.
      * @param array $query
      * @throws InvalidArgumentException When one of the arguments is invalid
      * @throws NotFoundException When no resources was returned
@@ -110,9 +147,17 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
      */
     protected function fetch(array $query): array
     {
+        $page = isset($query['page']) ? $query['page'] : 1;
         $result = $this->resource->fetchQuery($query);
         $this->countPages = $result['info']['pages'];
         $this->countItems = $result['info']['count'];
+        if (is_array($result['results'])) {
+            $values = array_values($result['results']);
+            foreach ($values as $key => $value) {
+                $queryIndex = (($page - 1) * $this->pageSize) + $key;
+                $this->queryItemCache[$queryIndex] = $value;
+            }
+        }
         return $result;
     }
 
@@ -122,7 +167,7 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
     public function count(): int
     {
         try {
-            return $this->getNumberOfPages();
+            return $this->getNumberOfItems();
         } catch (\Throwable $th) {
             return 0;
         }
@@ -142,7 +187,7 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
     public function offsetExists(mixed $offset): bool
     {
         try {
-            $max = $this->getNumberOfPages();
+            $max = $this->getNumberOfItems();
             return $offset > 0 && $offset <= $max;
         } catch (\Throwable $th) {
             return false;
@@ -155,7 +200,7 @@ class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
     public function offsetGet(mixed $offset)
     {
         try {
-            return $this->getPage($offset);
+            return $this->getItem($offset);
         } catch (\Throwable $th) {
             return null;
         }

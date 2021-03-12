@@ -36,7 +36,7 @@ interface TemplateInterface
     /**
      * Renders the template.
      * @return string
-     * @return \Exception When we don't know what happened
+     * @throws \Exception When we don't know what happened
      */
     function render(): string;
 }

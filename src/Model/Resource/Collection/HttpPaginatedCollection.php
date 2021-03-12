@@ -8,9 +8,9 @@ use Totallywicked\DevTest\Factory\FactoryInterface;
 use \Traversable;
 
 /**
- * Abstract implementation of the HttpPaginatedCollectionInterface
+ * Implementation of the HttpPaginatedCollectionInterface
  */
-abstract class AbstractHttpPaginatedCollection implements HttpPaginatedCollectionInterface
+class HttpPaginatedCollection implements HttpPaginatedCollectionInterface
 {
     /**
      * ResourceModel used internally by this collection

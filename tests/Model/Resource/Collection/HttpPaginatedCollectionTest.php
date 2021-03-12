@@ -1,7 +1,7 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
-use Totallywicked\DevTest\Model\Resource\Collection\AbstractHttpPaginatedCollection;
+use Totallywicked\DevTest\Model\Resource\Collection\HttpPaginatedCollection;
 use Totallywicked\DevTest\Exception\NotFoundException;
 use Totallywicked\DevTest\Model\Resource\HttpResourceInterface;
 use Totallywicked\DevTest\Model\Resource\AbstractHttpResource;
@@ -24,7 +24,7 @@ final class HttpPaginatedCollectionTest extends TestCase
 
     /**
      * @regression
-     * @covers AbstractHttpPaginatedCollection
+     * @covers HttpPaginatedCollection
      * @testdox Calling getPage with a number returns that page from the resource.
      * @testWith [{"name": "Morty"}, 1, 1]
      *           [{"name": "Morty"}, 2, 11]
@@ -32,7 +32,7 @@ final class HttpPaginatedCollectionTest extends TestCase
     public function testGetPage($query, $page, $modelId)
     {
         $collection = $this->resource->search($query);
-        $this->assertInstanceOf(AbstractHttpPaginatedCollection::class, $collection);
+        $this->assertInstanceOf(HttpPaginatedCollection::class, $collection);
         $result = $collection->getPage($page);
         $this->assertCount(1, $result);
         $this->assertInstanceOf(AbstractModel::class, $result[$modelId]);
@@ -40,35 +40,35 @@ final class HttpPaginatedCollectionTest extends TestCase
 
     /**
      * @regression
-     * @covers AbstractHttpPaginatedCollection
+     * @covers HttpPaginatedCollection
      * @testdox Calling getNumberOfPages returns a number of pages in the resource.
      * @testWith [{"name": "Morty"}, 2]
      */
     public function testGetNumberOfPages($query, $count)
     {
         $collection = $this->resource->search($query);
-        $this->assertInstanceOf(AbstractHttpPaginatedCollection::class, $collection);
+        $this->assertInstanceOf(HttpPaginatedCollection::class, $collection);
         $result = $collection->getNumberOfPages();
         $this->assertEquals($count, $result);
     }
 
     /**
      * @regression
-     * @covers AbstractHttpPaginatedCollection
+     * @covers HttpPaginatedCollection
      * @testdox Calling getNumberOfItems returns the size of the resource.
      * @testWith [{"name": "Morty"}, 54]
      */
     public function testGetNumberOfItems($query, $count)
     {
         $collection = $this->resource->search($query);
-        $this->assertInstanceOf(AbstractHttpPaginatedCollection::class, $collection);
+        $this->assertInstanceOf(HttpPaginatedCollection::class, $collection);
         $result = $collection->getNumberOfItems();
         $this->assertEquals($count, $result);
     }
 
     /**
      * @regression
-     * @covers AbstractHttpPaginatedCollection
+     * @covers HttpPaginatedCollection
      * @testdox Accessing a specific index of the resource returns that resource or null
      * @testWith [{"name": "Morty"}, 1, true]
      *           [{"name": "Morty"}, 404, false]
@@ -76,7 +76,7 @@ final class HttpPaginatedCollectionTest extends TestCase
     public function testAccessByIndex($query, $index, $shouldExist)
     {
         $collection = $this->resource->search($query);
-        $this->assertInstanceOf(AbstractHttpPaginatedCollection::class, $collection);
+        $this->assertInstanceOf(HttpPaginatedCollection::class, $collection);
         $result = $collection[$index];
         if ($shouldExist) {
             $this->assertCount(1, $result);
@@ -88,14 +88,14 @@ final class HttpPaginatedCollectionTest extends TestCase
 
     /**
      * @regression
-     * @covers AbstractHttpPaginatedCollection
+     * @covers HttpPaginatedCollection
      * @testdox Collection can be iterated over with foreach.
      * @testWith [{"name": "Morty"}, [0, 1, 1]]
      */
     public function testAccessInterator($query, $counts)
     {
         $collection = $this->resource->search($query);
-        $this->assertInstanceOf(AbstractHttpPaginatedCollection::class, $collection);
+        $this->assertInstanceOf(HttpPaginatedCollection::class, $collection);
         foreach ($collection as $i => $page) {
             $this->assertCount($counts[$i], $page);
             $this->assertContainsOnlyInstancesOf(AbstractModel::class, $page);
@@ -104,14 +104,14 @@ final class HttpPaginatedCollectionTest extends TestCase
 
     /**
      * @regression
-     * @covers AbstractHttpPaginatedCollection
+     * @covers HttpPaginatedCollection
      * @testdox Collection returns the size of the resource when used with the count() function.
      * @testWith [{"name": "Morty"}, 2]
      */
     public function testCount($query, $count)
     {
         $collection = $this->resource->search($query);
-        $this->assertInstanceOf(AbstractHttpPaginatedCollection::class, $collection);
+        $this->assertInstanceOf(HttpPaginatedCollection::class, $collection);
         $this->assertCount($count, $collection);
     }
 
@@ -149,7 +149,7 @@ final class HttpPaginatedCollectionTest extends TestCase
                         ->disableAutoReturnValueGeneration()
                 ),
                 $this->createMockedFactory(
-                    $this->getMockBuilder(AbstractHttpPaginatedCollection::class)
+                    $this->getMockBuilder(HttpPaginatedCollection::class)
                         ->enableOriginalConstructor()
                         ->enableOriginalClone()
                         ->disableArgumentCloning()

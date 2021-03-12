@@ -1,25 +1,22 @@
 <?php
 use PHPUnit\Framework\TestCase;
 
+use Totallywicked\DevTest\Model\Resource\Collection\HttpPaginatedCollectionInterfaceFactory;
 use Totallywicked\DevTest\Model\Resource\Collection\HttpPaginatedCollection;
-use Totallywicked\DevTest\Exception\NotFoundException;
-use Totallywicked\DevTest\Model\Resource\HttpResourceInterface;
-use Totallywicked\DevTest\Model\Resource\AbstractHttpResource;
-use Totallywicked\DevTest\Model\AbstractModel;
-use Totallywicked\DevTest\Model\ResourceIterator;
-use Totallywicked\DevTest\Factory\FactoryInterface;
-use PHPUnit\Framework\MockObject\MockBuilder;
-use Laminas\Diactoros\UriFactory;
-use Psr\Http\Message\ResponseInterface;
-use Psr\Http\Message\StreamInterface;
-
 use Totallywicked\DevTest\Model\Resource\CharacterResource;
 use Totallywicked\DevTest\Model\Resource\LocationResource;
 use Totallywicked\DevTest\Model\Resource\EpisodeResource;
 use Totallywicked\DevTest\Model\Character;
 use Totallywicked\DevTest\Model\Location;
 use Totallywicked\DevTest\Model\Episode;
+use Totallywicked\DevTest\Model\ResourceIterator;
+use Totallywicked\DevTest\Model\ResourceIteratorFactory;
+use Totallywicked\DevTest\Factory\FactoryInterface;
 use Totallywicked\DevTest\Service\SearchAggregator;
+use PHPUnit\Framework\MockObject\MockBuilder;
+use Psr\Http\Message\StreamInterface;
+use Psr\Http\Message\ResponseInterface;
+use Laminas\Diactoros\UriFactory;
 
 /**
  * Test for the SearchAggregator
@@ -167,7 +164,8 @@ final class SearchAggregatorTest extends TestCase
                 ->disableArgumentCloning()
                 ->disableAutoReturnValueGeneration(),
             ['resource'],
-            true
+            true,
+            ResourceIteratorFactory::class
         );
     }
 
@@ -204,7 +202,8 @@ final class SearchAggregatorTest extends TestCase
                 ->disableArgumentCloning()
                 ->disableAutoReturnValueGeneration(),
             ['resource', $iteratorFactory, 'query'],
-            true
+            true,
+            HttpPaginatedCollectionInterfaceFactory::class
         );
     }
 

@@ -9,7 +9,7 @@ use Totallywicked\DevTest\Exception\NotFoundException;
  * A simple model for accessing resources behind remote HTTP endpoint.
  * Array access can be used for accessing elements by their ID.
  */
-interface HttpResourceInterface extends \ArrayAccess, \Countable, \IteratorAggregate
+interface HttpResourceInterface extends \Countable, \IteratorAggregate, \ArrayAccess
 {
     /**
      * Look up the resource by its id.

@@ -1,7 +1,10 @@
 <?php
 namespace Totallywicked\DevTest\Model\Resource;
 
+use Totallywicked\DevTest\Factory\FactoryInterface;
 use Totallywicked\DevTest\Model\EpisodeFactory;
+use Psr\Http\Message\UriInterface;
+use GuzzleHttp\ClientInterface;
 
 /**
  * Resource for accessing episodes.

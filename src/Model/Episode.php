@@ -75,7 +75,11 @@ class Episode extends AbstractModel
     {
         if ($this->charactersCache === null) {
             $characterIds = $this->getIdsFromUrls($this->data['characters']);
-            $this->charactersCache = $this->characterResource->getByIds($characterIds);
+            if (!is_array($characterIds)) {
+                $this->charactersCache = [$this->characterResource->getById($characterIds)];
+            } else {
+                $this->charactersCache = $this->characterResource->getByIds($characterIds);
+            }
         }
         return $this->charactersCache;
     }

@@ -75,7 +75,11 @@ class Location extends AbstractModel
     {
         if ($this->residentsCache === null) {
             $characterIds = $this->getIdsFromUrls($this->data['residents']);
-            $this->residentsCache = $this->characterResource->getById($characterIds);
+            if (!is_array($characterIds)) {
+                $this->residentsCache = [$this->characterResource->getById($characterIds)];
+            } else {
+                $this->residentsCache = $this->characterResource->getByIds($characterIds);
+            }
         }
         return $this->residentsCache;
     }

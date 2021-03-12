@@ -174,7 +174,11 @@ class Character extends AbstractModel
     {
         if ($this->episodeCache === null) {
             $episodeIds = $this->getIdsFromUrls($this->data['episode']);
-            $this->episodeCache = $this->episodeResource->getByIds($episodeIds);
+            if (!is_array($episodeIds)) {
+                $this->episodeCache = [$this->episodeResource->getById($episodeIds)];
+            } else {
+                $this->episodeCache = $this->episodeResource->getByIds($episodeIds);
+            }
         }
         return $this->episodeCache;
     }
